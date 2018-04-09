@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-autowire="byName">
+
+    <!-- order state -->
+    <bean name="orderStatePersister" class="com.bevis.fox.fsm.test.fsm.order.OrderStatePersister"/>
+    <bean name="orderStateFilter" class="com.bevis.fox.fsm.test.fsm.order.OrderStateFilter"/>
+    <bean name="orderStateManager" class="com.bevis.fox.fsm.test.fsm.order.OrderStateManager">
+        <property name="stateFilter" ref="orderStateFilter"/>
+    </bean>
+    <bean name="orderStateDelegate" class="com.bevis.fox.fsm.test.fsm.order.OrderStateDelegate">
+        <property name="stateManager" ref="orderStateManager"/>
+        <property name="statePersister" ref="orderStatePersister"/>
+    </bean>
+
+    <!-- refund state -->
+    <bean name="refundStatePersister" class="com.bevis.fox.fsm.test.fsm.refund.RefundStatePersister"/>
+    <bean name="refundStateFilter" class="com.bevis.fox.fsm.test.fsm.refund.ReundStateFilter"/>
+    <bean name="refundStateManager" class="com.bevis.fox.fsm.test.fsm.refund.RefundStateManager">
+        <property name="stateFilter" ref="refundStateFilter"/>
+    </bean>
+    <bean name="refundStateDelegate" class="com.bevis.fox.fsm.test.fsm.refund.RefundStateDelegate">
+        <property name="stateManager" ref="refundStateManager"/>
+        <property name="statePersister" ref="refundStatePersister"/>
+    </bean>
+
+    <!-- state starter -->
+    <bean name="foxFsm" class="com.bevis.fox.fsm.DefaultStateStarter">
+        <property name="stateRegisters">
+            <list>
+                <ref bean="orderStateManager"/>
+                <ref bean="refundStateManager"/>
+            </list>
+        </property>
+    </bean>
+</beans>
